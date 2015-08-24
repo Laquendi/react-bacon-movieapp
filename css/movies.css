@@ -1,0 +1,10 @@
+.movieTitle {
+  clear: left;
+}
+.movieThumbnail {
+  float: left;
+  height: 180px;
+}
+.movieCast {
+  float: left;
+}
