@@ -72,6 +72,16 @@ var Library = React.createClass({
 });
 
 var apiUrl = 'http://netflixroulette.net/api/api.php?actor=';
+
+function removeFaultyMovies(ms) {
+  return Bacon.fromArray(ms).flatMap(function(m) {
+    var img = $(new Image());
+    var loaded = Bacon.fromEvent(img, "load").map(() => m);
+    img.attr('src', m.poster);
+    return loaded;
+  }).bufferWithTime(200).first();
+}
+
 var App = React.createClass({
   getInitialState: function() {
     return {movies: [], library: []};
@@ -81,7 +91,8 @@ var App = React.createClass({
   componentWillMount: function() {
     var search = this.searchStream.flatMap(_.identity);
     var movies = search.flatMapLatest(s => 
-      Bacon.fromPromise($.ajax(apiUrl + s))).toProperty([]);
+      Bacon.fromPromise($.ajax(apiUrl + s)))
+      .flatMap(removeFaultyMovies).toProperty([]);
     var buyEvents = this.buyStream.flatMap(_.identity);
     var library = buyEvents.scan([], function(acc,e){
       if(_.all(acc, a => a !== e)) return acc.concat(e);
