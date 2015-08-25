@@ -7,7 +7,6 @@ var Search = React.createClass({
     this.props.returnStream.push(searchEventStream);
     this.props.returnStream.end();
   },
-
   render: function() {
     return (
       <div className="searchContainer">
@@ -33,9 +32,9 @@ var MovieList = React.createClass({
 
 var Movie = React.createClass({
   componentDidMount: function() {
-    //var data = this.props.data;
     var buyButton = this.refs.buy.getDOMNode();
-    var buyEventStream = Bacon.fromEvent(buyButton, "click").map(() => this.props.data.show_title);
+    var buyEventStream = Bacon.fromEvent(buyButton, "click").map(() => 
+      this.props.data.show_title);
     this.props.returnStream.push(buyEventStream);
   },
   render: function() {
@@ -73,6 +72,7 @@ var Library = React.createClass({
 
 var apiUrl = 'http://netflixroulette.net/api/api.php?actor=';
 
+//Some of the poster imgs are missing. Preload images and only show ones that loaded.
 function removeFaultyMovies(ms) {
   return Bacon.fromArray(ms).flatMap(function(m) {
     var img = $(new Image());
@@ -111,7 +111,7 @@ var App = React.createClass({
       <div className="app">
         <Library data={this.state.library} />
         <Search returnStream={this.searchStream} />
-        <h1>{this.state.search} movies</h1>
+        <h1>Results for query: {this.state.search}</h1>
         <MovieList data={this.state.movies} returnStream={this.buyStream} />
       </div>
     );
