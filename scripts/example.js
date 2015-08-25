@@ -1,13 +1,13 @@
 var isEnter = e => e.keyCode === 13;
-var Search = React.createClass({
-  componentDidMount: function() {
+class Search extends React.Component {
+  componentDidMount() {
     var input = this.refs.search.getDOMNode();
     var searchEventStream = Bacon.fromEvent(input, "keydown").filter(isEnter)
       .map(function() {var tmp = input.value; input.value = ''; return tmp});
     this.props.returnStream.push(searchEventStream);
     this.props.returnStream.end();
-  },
-  render: function() {
+  }
+  render() {
     return (
       <div className="searchContainer">
         <h1> Search </h1>
@@ -15,10 +15,10 @@ var Search = React.createClass({
       </div>
     );
   }
-});
+}
 
-var MovieList = React.createClass({
-  render: function() {
+class MovieList extends React.Component {
+  render() {
     var movieNodes = this.props.data.map((movie, i) => 
       <Movie key={i} data={movie} returnStream={this.props.returnStream}/>
     );
@@ -28,16 +28,16 @@ var MovieList = React.createClass({
       </div>
     );
   }
-});
+}
 
-var Movie = React.createClass({
-  componentDidMount: function() {
+class Movie extends React.Component {
+  componentDidMount() {
     var buyButton = this.refs.buy.getDOMNode();
     var buyEventStream = Bacon.fromEvent(buyButton, "click").map(() => 
       this.props.data.show_title);
     this.props.returnStream.push(buyEventStream);
-  },
-  render: function() {
+  }
+  render() {
     var data = this.props.data;
     return (
       <div className="movie">
@@ -54,10 +54,10 @@ var Movie = React.createClass({
       </div>
     );
   }
-});
+}
 
-var Library = React.createClass({
-  render: function() {
+class Library extends React.Component {
+  render() {
     var nodes = this.props.data.map(e => <li> {e} </li>);
     return (
       <div className="library">
@@ -68,7 +68,7 @@ var Library = React.createClass({
       </div>
     );
   }
-});
+}
 
 var apiUrl = 'http://netflixroulette.net/api/api.php?actor=';
 
@@ -82,13 +82,14 @@ function removeFaultyMovies(ms) {
   }).bufferWithTime(300).first();
 }
 
-var App = React.createClass({
-  getInitialState: function() {
-    return {movies: [], library: []};
-  },
-  searchStream: new Bacon.Bus(),
-  buyStream: new Bacon.Bus(),
-  componentWillMount: function() {
+class App extends React.Component {
+  constructor() {
+    super();
+    this.searchStream = new Bacon.Bus();
+    this.buyStream = new Bacon.Bus();
+
+    this.state = {movies: [], library:[]};
+
     var search = this.searchStream.flatMap(_.identity);
     var movies = search.flatMapLatest(s => 
       Bacon.fromPromise($.ajax(apiUrl + s)))
@@ -99,14 +100,13 @@ var App = React.createClass({
     else return acc;
     }).toProperty();
 
-    var state = Bacon.combineTemplate({
+    Bacon.combineTemplate({
       movies,
       search,
       library
-    }).toEventStream().onValue(this.setState.bind(this));
-
-  },
-  render: function() {
+    }).onValue(this.setState.bind(this));
+  }
+  render() {
     return (
       <div className="app">
         <Library data={this.state.library} />
@@ -116,7 +116,7 @@ var App = React.createClass({
       </div>
     );
   }
-});
+}
 
 React.render(
   <App />,
