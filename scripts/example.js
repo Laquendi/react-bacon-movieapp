@@ -111,7 +111,7 @@ class App extends React.Component {
       <div className="app">
         <Library data={this.state.library} />
         <Search returnStream={this.searchStream} />
-        <h1>Results for query: {this.state.search}</h1>
+        <h1>Showing results for query: {this.state.search}</h1>
         <MovieList data={this.state.movies} returnStream={this.buyStream} />
       </div>
     );
