@@ -79,7 +79,7 @@ function removeFaultyMovies(ms) {
     var loaded = Bacon.fromEvent(img, "load").map(() => m);
     img.attr('src', m.poster);
     return loaded;
-  }).bufferWithTime(200).first();
+  }).bufferWithTime(300).first();
 }
 
 var App = React.createClass({
