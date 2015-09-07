@@ -1,5 +1,6 @@
 Test app that uses React and Bacon.js
 
-[Link to online demo](http://laquendi.github.io/react-bacon-movieapp/)
+[== Slides from HelsinkiJS presentation ==](http://slides.com/santtukeskinen/deck#/)
 
-[Slides from HelsinkiJS presentation](http://slides.com/santtukeskinen/deck#/)
+[Link to online demo](http://skeskinen.github.io/react-bacon-movieapp/)
+

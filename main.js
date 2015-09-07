@@ -10,8 +10,8 @@ class Search extends React.Component {
   render() {
     return (
       <div className="searchContainer">
-        <h1> Search </h1>
-        <input ref="search" placeholder="Search..."/>
+        <h1> Search movies </h1>
+        <input ref="search" placeholder="Search with actor name..."/>
       </div>
     );
   }
